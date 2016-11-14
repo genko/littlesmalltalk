@@ -4,17 +4,23 @@ CFLAGS=-O0 -g3 -Wall -Werror
 
 all: image
 
-lsti:
+mio:
 	gcc -o $@ $(CFLAGS) $(addprefix src/, $(CFILES)) -lm
 
-image: lsti
+image: mio
 	@echo Creating initial image . . .
-	./lsti stlib/*
+	./mio stlib/*
 
 format:
 	cd src && astyle -A1 *
 
 clean:
 	@-rm -f *.o 2>/dev/null
-	@-rm lsti 2>/dev/null
-	
+	@-rm mio 2>/dev/null
+
+test:
+	echo '1+1' | ./mio | $(TEE) $@.out
+	$(DIFF) $@.ref $@.out
+	rm -f $@.out
+
+.PHONY: test clean

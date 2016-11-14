@@ -34,7 +34,7 @@ object getClass(register object obj)
             intClass = nameTableLookup(symbols,"Integer");
         return (intClass);
     }
-    return (classField(obj));
+    return (parentField(obj));
 }
 
 object newArray(int size)
@@ -44,7 +44,7 @@ object newArray(int size)
     newObj = allocObject(size);
     if (arrayClass == nilobj)
         arrayClass = nameTableLookup(symbols,"Array");
-    setClass(newObj, arrayClass);
+    setParent(newObj, arrayClass);
     return newObj;
 }
 
@@ -53,7 +53,7 @@ object newBlock()
     object newObj;
 
     newObj = allocObject(blockSize);
-    setClass(newObj, nameTableLookup(symbols,"Block"));
+    setParent(newObj, nameTableLookup(symbols,"Block"));
     return newObj;
 }
 
@@ -62,7 +62,7 @@ object newByteArray(int size)
     object newobj;
 
     newobj = allocByte(size);
-    setClass(newobj, nameTableLookup(symbols,"ByteArray"));
+    setParent(newobj, nameTableLookup(symbols,"ByteArray"));
     return newobj;
 }
 
@@ -72,7 +72,7 @@ object newChar(int value)
 
     newobj = allocObject(1);
     basicAtPut(newobj, 1, newInteger(value));
-    setClass(newobj, nameTableLookup(symbols,"Char"));
+    setParent(newobj, nameTableLookup(symbols,"Char"));
     return (newobj);
 }
 
@@ -81,7 +81,7 @@ object newClass(const char *name)
     object newObj, nameObj;
 
     newObj = allocObject(classSize);
-    setClass(newObj, nameTableLookup(symbols,"Class"));
+    setParent(newObj, nameTableLookup(symbols,"Class"));
 
     /* now make name */
     nameObj = newSymbol(name);
@@ -112,7 +112,7 @@ object newContext(int link, object method, object args, object temp)
     object newObj;
 
     newObj = allocObject(contextSize);
-    setClass(newObj, nameTableLookup(symbols,"Context"));
+    setParent(newObj, nameTableLookup(symbols,"Context"));
     basicAtPut(newObj, linkPtrInContext, newInteger(link));
     basicAtPut(newObj, methodInContext, method);
     basicAtPut(newObj, argumentsInContext, args);
@@ -125,7 +125,7 @@ object newDictionary(int size)
     object newObj;
 
     newObj = allocObject(1);
-    setClass(newObj, nameTableLookup(symbols,"Dictionary"));
+    setParent(newObj, nameTableLookup(symbols,"Dictionary"));
     basicAtPut(newObj, 1, newArray(size));
     return newObj;
 }
@@ -136,7 +136,7 @@ object newFloat(double d)
 
     newObj = allocByte((int) sizeof(double));
     ncopy(charPtr(newObj), (char *) &d, (int) sizeof(double));
-    setClass(newObj, nameTableLookup(symbols,"Float"));
+    setParent(newObj, nameTableLookup(symbols,"Float"));
     return newObj;
 }
 
@@ -153,7 +153,7 @@ object newLink(object key, object value)
     object newObj;
 
     newObj = allocObject(3);
-    setClass(newObj, nameTableLookup(symbols,"Link"));
+    setParent(newObj, nameTableLookup(symbols,"Link"));
     basicAtPut(newObj, 1, key);
     basicAtPut(newObj, 2, value);
     return newObj;
@@ -164,7 +164,7 @@ object newMethod()
     object newObj;
 
     newObj = allocObject(methodSize);
-    setClass(newObj, nameTableLookup(symbols,"Method"));
+    setParent(newObj, nameTableLookup(symbols,"Method"));
     return newObj;
 }
 
@@ -175,7 +175,7 @@ object newStString(const char *value)
     newObj = allocStr(value);
     if (stringClass == nilobj)
         stringClass = nameTableLookup(symbols,"String");
-    setClass(newObj, stringClass);
+    setParent(newObj, stringClass);
     return (newObj);
 }
 
@@ -192,7 +192,7 @@ object newSymbol(const char *str)
     newObj = allocStr(str);
     if (symbolClass == nilobj)
         symbolClass = nameTableLookup(symbols,"Symbol");
-    setClass(newObj, symbolClass);
+    setParent(newObj, symbolClass);
     nameTableInsert(symbols, strHash(str), newObj, nilobj);
     return newObj;
 }

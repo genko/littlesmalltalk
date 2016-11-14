@@ -52,12 +52,6 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        /* execute the main system process loop repeatedly */
-        /*debugging = true;*/
-
-        /* not using windowing interface, safe to print out message */
-        printf("Little Smalltalk Improved, Version 0.01\n");
-
         while (execute(firstProcess, 15000))
             ;
     }
@@ -141,18 +135,18 @@ static void makeInitialImage()
     /* next create #Symbol, Symbol and Class */
     symbolObj = newSymbol("Symbol");
     symbolClass = newClass("Symbol");
-    setClass(symbolObj, symbolClass);
+    setParent(symbolObj, symbolClass);
     classClass = newClass("Class");
-    setClass(symbolClass, classClass);
-    setClass(classClass, classClass);
+    setParent(symbolClass, classClass);
+    setParent(classClass, classClass);
 
     /* now fix up classes for symbol table */
     /* and make a couple common classes, just to hold their places */
     newClass("Link");
     newClass("ByteArray");
-    setClass(hashTable, newClass("Array"));
-    setClass(symbols, newClass("Dictionary"));
-    setClass(nilobj, newClass("UndefinedObject"));
+    setParent(hashTable, newClass("Array"));
+    setParent(symbols, newClass("Dictionary"));
+    setParent(nilobj, newClass("UndefinedObject"));
     newClass("String");
     nameTableInsert(symbols, strHash("symbols"), newSymbol("symbols"), symbols);
 

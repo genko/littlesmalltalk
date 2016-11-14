@@ -286,7 +286,7 @@ doSendMessage:
             else
             {
                 rcv = sysMemPtr(argumentsAt(0));
-                methodClass = classField(argumentsAt(0));
+                methodClass = parentField(argumentsAt(0));
             }
 
 doFindMessage:
@@ -346,7 +346,7 @@ doFindMessage:
                 ipush(argarray);
                 messageToSend = newSymbol("watchWith:");
                 /* try again - if fail really give up */
-                methodClass = classField(method);
+                methodClass = parentField(method);
                 if (!findMethod(&methodClass))
                 {
                     sysWarn("can't find", "watch method");

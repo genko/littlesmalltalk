@@ -53,8 +53,8 @@ void imageRead(FILE *fp)
 
         if ((i < 0) || (i > ObjectTableMax))
             sysError("reading index out of range", "");
-        objectTable[i].STclass = dummyObject.cl;
-        if ((objectTable[i].STclass < 0) || ((objectTable[i].STclass >> 1)
+        objectTable[i].parent = dummyObject.cl;
+        if ((objectTable[i].parent < 0) || ((objectTable[i].parent >> 1)
                                              > ObjectTableMax))
         {
             fprintf(stderr, "index %d\n", dummyObject.cl);
@@ -103,7 +103,7 @@ void imageWrite(FILE *fp)
         if (objectTable[i].referenceCount > 0)
         {
             dummyObject.di = i;
-            dummyObject.cl = objectTable[i].STclass;
+			dummyObject.cl = objectTable[i].parent;
             dummyObject.ds = size = objectTable[i].size;
             fw(fp, (char *) &dummyObject, sizeof(dummyObject));
             if (size < 0)
@@ -167,7 +167,7 @@ object ioPrimitive(int number, object *arguments)
 
     case 4: /* get character */
         sysError("file operation not implemented yet", "");
-
+        break;
     case 5: /* get string */
         if (!fp[i])
             break;

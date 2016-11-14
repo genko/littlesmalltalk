@@ -31,7 +31,7 @@ typedef short object;
 
 struct objectStruct
 {
-    object STclass;
+    object parent;
     short referenceCount;
     short size;
     object *memory;
@@ -121,8 +121,8 @@ extern void byteAtPut(object z, int i, int x);
  class fields and size fields of objects
  */
 
-# define classField(x) objectTable[x>>1].STclass
-# define setClass(x,y) incr(classField(x)=y)
+# define parentField(x) objectTable[x>>1].parent
+# define setParent(x,y) incr(parentField(x)=y)
 # define sizeField(x) objectTable[x>>1].size
 
 # define sysMemPtr(x) objectTable[x>>1].memory

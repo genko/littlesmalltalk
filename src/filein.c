@@ -163,9 +163,9 @@ void fileIn(FILE *fd, boolean printit)
     {
         lexinit(textBuffer);
         if (token == inputend)
-            ; /* do nothing, get next line */
+        	(void)0; /* do nothing, get next line */
         else if ((token == binary) && (strcmp(tokenString, "\"")==0))
-            ; /* do nothing, its a comment */
+        	(void)0; /* do nothing, its a comment */
         /* Syntax for Class and Methods definitions
          
          Number extend [

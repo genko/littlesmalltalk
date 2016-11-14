@@ -71,7 +71,7 @@ static object zeroaryPrims(int number)
         break;
 
     case 2:
-        fprintf(stderr, "object count %d\n", objectCount());
+       // fprintf(stderr, "object count %d\n", objectCount());
         break;
 
     case 3: /* return a random number */
@@ -202,9 +202,9 @@ static int binaryPrims(int number, object firstarg, object secondarg)
         break;
 
     case 2: /* set class of object */
-        decr(classField(firstarg))
+        decr(parentField(firstarg))
         ;
-        setClass(firstarg, secondarg);
+        setParent(firstarg, secondarg);
         returnedObject = firstarg;
         break;
 

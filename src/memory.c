@@ -127,7 +127,7 @@ void setFreeLists()
             size = p->size;
             if (size < 0)
                 size = ((-size) + 1) / 2;
-            p->STclass = objectFreeList[size];
+            p->parent = objectFreeList[size];
             objectFreeList[size] = z;
             for (i = size; i > 0;)
                 p->memory[--i] = nilobj;
@@ -182,14 +182,14 @@ object allocObject(int memorySize)
     /* first try the free lists, this is fastest */
     if ((position = objectFreeList[memorySize]) != 0)
     {
-        objectFreeList[memorySize] = objectTable[position].STclass;
+        objectFreeList[memorySize] = objectTable[position].parent;
     }
 
     /* if not there, next try making a size zero object and
      making it bigger */
     else if ((position = objectFreeList[0]) != 0)
     {
-        objectFreeList[0] = objectTable[position].STclass;
+        objectFreeList[0] = objectTable[position].parent;
         objectTable[position].size = memorySize;
         objectTable[position].memory = mBlockAlloc(memorySize);
     }
@@ -202,7 +202,7 @@ object allocObject(int memorySize)
         for (i = memorySize + 1; i < FREELISTMAX; i++)
             if ((position = objectFreeList[i]) != 0)
             {
-                objectFreeList[i] = objectTable[position].STclass;
+                objectFreeList[i] = objectTable[position].parent;
                 /* just trim it a bit */
                 objectTable[position].size = memorySize;
                 done = true;
@@ -214,7 +214,7 @@ object allocObject(int memorySize)
             for (i = 1; i < memorySize; i++)
                 if ((position = objectFreeList[i]) != 0)
                 {
-                    objectFreeList[i] = objectTable[position].STclass;
+                    objectFreeList[i] = objectTable[position].parent;
                     objectTable[position].size = memorySize;
 # ifdef mBlockAlloc
                     free(objectTable[position].memory);
@@ -232,7 +232,7 @@ object allocObject(int memorySize)
 
     /* set class and type */
     objectTable[position].referenceCount = 0;
-    objectTable[position].STclass = nilobj;
+    objectTable[position].parent = nilobj;
     objectTable[position].size = memorySize;
     return (position << 1);
 }
@@ -287,11 +287,11 @@ void sysDecr(object z)
         fprintf(stderr, "object %d\n", z);
         sysError("negative reference count", "");
     }
-    decr(p->STclass);
+    decr(p->parent);
     size = p->size;
     if (size < 0)
         size = ((-size) + 1) / 2;
-    p->STclass = objectFreeList[size];
+    p->parent = objectFreeList[size];
     objectFreeList[size] = z >> 1;
     if (size > 0)
     {
@@ -421,7 +421,7 @@ void visit(register object x)
         if (++(objectTable[x >> 1].referenceCount) == 1)
         {
             /* then it's the first time we've visited it, so: */
-            visit(objectTable[x >> 1].STclass);
+            visit(objectTable[x >> 1].parent);
             s = sizeField(x);
             if (s > 0)
             {
